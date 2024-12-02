@@ -50,6 +50,9 @@ function displayCountries(countries) {
                             <h5 class="card-title">${country.name.common}</h5>
                             <p class="card-text">Region: ${country.region}</p>
                             <p class="card-text">Population: ${country.population.toLocaleString()}</p>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#${country.cca3}">
+                              knop
+                            </button>
                         </div>
                     </article>
                 </div>
@@ -81,7 +84,7 @@ function displayCountries(countries) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                </div>
             `;
     });
     countriesContainer.innerHTML = outputHTML;

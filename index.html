@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -25,6 +25,13 @@
     <!-- algemene css -->
     <link href="./css/style.css" rel="stylesheet">
 
+    <!-- CUSTOM JS -->
+    <script src="./js/main-2.js" defer></script>
+
+    <!-- SEO META TAGS -->
+
+    <!-- OPEN GRAPH -->
+
 </head>
 <body>
 
@@ -39,27 +46,57 @@
 </header>
 
 <main>
+    <!--Search en select section-->
     <section class="container mt-5">
         <div class="row mb-5">
             <div class="col-12">
+                <!-- Zoekfunctie en continent-select -->
                 <form id="filter-form" class="d-flex flex-column flex-lg-row justify-content-center">
+                    <!-- Zoekveld -->
                     <input id="country-search" type="text" class="form-control mb-4 mb-lg-0 me-2 py-3 py-lg-2" placeholder="Please fill in a country">
+                    <!-- Select continent -->
                     <select id="continent-select" class="form-select me-2 mb-4 mb-lg-0 py-3 py-lg-2">
                         <option value="">Choose a continent</option>
                     </select>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Filter</button>
+                    <!-- Submit knop -->
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i>Filter</button>
                 </form>
             </div>
         </div>
     </section>
 
+
+    <!--Card section-->
     <section class="container mb-5">
-        <div id="countries-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"></div>
-        <div id="error-message" class="text-danger mt-3"></div>
+        <!-- Hier komen de landen kaarten -->
+        <div id="countries-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <!--Deze col moet dynamisch via api-->
+            <!--<div class="col">
+                &lt;!&ndash;Card&ndash;&gt;
+                <article class="card">
+                    &lt;!&ndash;De vlag&ndash;&gt;
+                    <img src="https://placehold.co/600x400" class="card-img-top" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">&lt;!&ndash;Naam van land&ndash;&gt;</h5>
+                        <p class="card-text">Continent: </p>
+                        <p class="card-text">Population: </p>
+                        &lt;!&ndash; Button trigger modal &ndash;&gt;
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            More info
+                        </button>
+                    </div>
+                </article>
+            </div>-->
+        </div>
+
+        <!-- Foutmeldingen -->
+        <div id="error-message" class="text-danger mt-3"><!--Geen landen gevonden--></div>
     </section>
 </main>
 
-<footer></footer>
+<footer>
+
+</footer>
 
 <script crossorigin="anonymous"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
