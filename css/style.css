@@ -25,3 +25,20 @@ body{
 .fs-1 {
     font-size: 5rem !important;
 }
+
+.img-modal{
+
+    width: 600px; /* Stel een vaste breedte in */
+    height: 400px; /* Stel een vaste hoogte in */
+    object-fit: contain; /* Zorg dat de vlag zijn verhoudingen behoudt */
+    /*background-color: #f9f9f9; !* Optioneel: Achtergrondkleur voor consistentie *!*/
+    display: block; /* Zorgt dat de vlag goed inline wordt weergegeven */
+    margin: 0 auto; /* Centreer indien nodig */
+
+
+    /*width: 600px;
+    aspect-ratio: 5 / 3; !* Standaard verhouding voor vlaggen *!
+    object-fit: cover;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;*/
+}
