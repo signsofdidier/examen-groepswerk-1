@@ -1,11 +1,19 @@
+/*font sizes*/
+.fs-1 {
+    font-size: 5rem !important;
+}
+
 body{
     margin:0 !important;
     padding: 0 !important;
+    background: rgb(244,244,244);
+    background: linear-gradient(90deg, rgba(244,244,244,1) 45%, rgba(255,255,255,1) 100%);
 }
 
+/*Hero section*/
 #hero {
     position: relative;
-    height: 600px;
+    height: 400px;
     overflow: hidden;
 }
 
@@ -22,6 +30,24 @@ body{
     background: rgba(0, 0, 0, 0.5);
 }
 
-.fs-1 {
-    font-size: 5rem !important;
+/*Card section*/
+.card img{
+    height:200px;
+    object-fit: cover;
 }
+
+.card-btn {
+    background: none;
+    cursor: pointer;
+}
+
+.card {
+    transition: all 0.3s ease-in-out;
+}
+
+.card-btn:hover .card {
+    transform: translateY(-10px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    border:none;
+}
+
