@@ -42,6 +42,7 @@ function findCountries() {
                     currencyInfo = 'No currency info available.';
                 }
                 //const currencyInfo = country.currencies ? Object.keys(country.currencies).join(', ') : 'No currency available!'
+                // talen terug krijgen via languages
                 const languages = country.languages ? Object.values(country.languages).join(', ') : 'No languages available!';
                 outputHTML += `
                     <div class="col">
@@ -72,6 +73,9 @@ function findCountries() {
                                     <!--leaflet map-->
                                     <div class="modal-kaart">
                                         <!-- Hier komt de leaflet map -->
+                                       <div id="map" style="height: 180px;">
+                                       
+                                       </div>
                                     </div>
                                     <!--land info-->
                                     <div class="modal-info">
