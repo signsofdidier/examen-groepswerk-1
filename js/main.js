@@ -79,7 +79,7 @@ function findCountries() {
                                         <p>Language: ${languages}</p>
                                         <p>currency: ${currencyInfo}</p>
                                         <p>Population: ${country.population.toLocaleString()}</p>
-                                        <img class="img-modal bg-secondary" src="${country.flags.svg}" alt="country_flag">
+                                        <img class="img-modal" src="${country.flags.svg}" alt="country_flag">
                                     </div>
                     
                                 </div>
