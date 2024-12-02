@@ -53,6 +53,35 @@ function displayCountries(countries) {
                         </div>
                     </article>
                 </div>
+                
+                <div class="modal fade" id="${country.cca3}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content bg-secondary">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">${country.name.common}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body d-flex">
+                                    <!--leaflet map-->
+                                    <div class="modal-kaart">
+                                        <!-- Hier komt de leaflet map -->
+                                    </div>
+                                    <!--land info-->
+                                    <div class="modal-info">
+                                        <p>Capitol: ${country.capital}</p>
+                                        <p>Language: ${languages}</p>
+                                        <p>currency: ${currencyInfo}</p>
+                                        <p>Population: ${country.population.toLocaleString()}</p>
+                                        <img class="img-modal" src="${country.flags.svg}" alt="country_flag">
+                                    </div>
+                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             `;
     });
     countriesContainer.innerHTML = outputHTML;
