@@ -8,7 +8,6 @@ const errorMessage = document.getElementById("error-message");
 function getRegions() {
     axios.get('https://restcountries.com/v3.1/all')
         .then(response => {
-
             const regions = new Set(response.data.map(country => country.region).filter(region => region));
             regions.forEach(region => {
                 const option = document.createElement("option");
@@ -60,6 +59,25 @@ function displayCountries(countries) {
         //const currencyInfo = country.currencies ? Object.keys(country.currencies).join(', ') : 'No currency available!'
         const languages = country.languages ? Object.values(country.languages).join(', ') : 'No languages available!';
 
+        //leafletjs map
+        var cordinates = country.latlng;
+        var cordinatesCapital = country.capitalInfo.latlng;
+        setTimeout(() => {
+            var map = L.map(`${country.flag}`).setView([cordinates[0], cordinates[1]], 8);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+            var marker = L.marker([cordinatesCapital[0], cordinatesCapital[1]]).addTo(map);
+            var countryModal = document.getElementById(`${country.cca3}`);
+            countryModal.addEventListener('shown.bs.modal', function () {
+                map.invalidateSize(); // Ensure the map resizes correctly after modal is fully displayed
+            });
+        }, 1000);
+
+
+
+
         outputHTML += `
                 <div class="col">
                     <button type="button" class="card-btn border-0 p-0 m-0 w-100 text-start" data-bs-toggle="modal" data-bs-target="#${country.cca3}">
@@ -84,10 +102,12 @@ function displayCountries(countries) {
                                 </div>
                                 <div class="modal-body">
                                     <div class="row d-block d-lg-flex py-1">
+                                         <!-- country.latlng hierdoor krijg je de cooordinaten van een land (voor het land)-->
+                                         <!-- country.capitalInfo.latlng coordinaten van Capital (voor marker)-->
                                          <!--leaflet map-->
-                                            <div class="col-12 col-lg-8 modal-kaart mb-4 mb-lg-0">
+                                            <div id="${country.flag}" class="col-12 col-lg-8 modal-kaart mb-4 mb-lg-0">
                                                 <!-- Hier komt de leaflet map -->
-                                                <img src="https://placehold.co/800x500" class="img-fluid" alt="">
+                                               <!-- <img src="https://placehold.co/800x500" class="img-fluid" alt=""> -->
                                             </div>
                                             <div class="col-12 col-lg-4">
                                                 <img class="img-fluid w-100 mb-4" src="${country.flags.svg}" alt="country_flag">
@@ -105,7 +125,7 @@ function displayCountries(countries) {
                         </div>
                 </div>
             
-            `;
+       `;
     });
     countriesContainer.innerHTML = outputHTML;
     errorMessage.innerHTML = '';
