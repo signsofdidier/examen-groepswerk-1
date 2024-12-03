@@ -26,7 +26,6 @@ function getCountries(url) {
     axios.get(url)
         .then(response => {
             const countries = response.data;
-            // Als er geen data is (null, undefined) en er geen lege array array is:
             if (!countries || countries.length === 0) {
                 displayError("No countries found.");
                 return;
@@ -44,10 +43,8 @@ function displayCountries(countries) {
     let outputHTML = '';
 
     countries.forEach(country => {
-        // Controleer of het land currencies heeft
         let currencyInfo = '';
         if (country.currencies) {
-            // Itereer door de currencies
             const currencyKeys = Object.keys(country.currencies);
             currencyInfo = currencyKeys.map(key => {
                 const currency = country.currencies[key];
@@ -56,79 +53,87 @@ function displayCountries(countries) {
         } else {
             currencyInfo = 'No currency info available.';
         }
-        //const currencyInfo = country.currencies ? Object.keys(country.currencies).join(', ') : 'No currency available!'
+
         const languages = country.languages ? Object.values(country.languages).join(', ') : 'No languages available!';
 
-        //leafletjs map
-        var cordinates = country.latlng;
-        var cordinatesCapital = country.capitalInfo.latlng;
-        setTimeout(() => {
-            var map = L.map(`${country.flag}`).setView([cordinates[0], cordinates[1]], 8);
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-            var marker = L.marker([cordinatesCapital[0], cordinatesCapital[1]]).addTo(map);
-            var countryModal = document.getElementById(`${country.cca3}`);
-            countryModal.addEventListener('shown.bs.modal', function () {
-                map.invalidateSize(); // Ensure the map resizes correctly after modal is fully displayed
-            });
-        }, 1000);
-
-
-
+        // Gebruik een unieke kaart-ID voor elke modal
+        const mapId = `map-${country.cca3}`;
 
         outputHTML += `
-                <div class="col">
-                    <button type="button" class="card-btn border-0 p-0 m-0 w-100 text-start" data-bs-toggle="modal" data-bs-target="#${country.cca3}">
-                        <article class="card p-3 shadow-sm border-0">
-                            <img src="${country.flags.svg}" class="card-img-top" alt="Flag of ${country.name.common}">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">${country.name.common}</h5>
-                                <p class="card-text mb-1"><span class="fw-bold">Region:</span> ${country.region}</p>
-                                <p class="card-text m-0"><span class="fw-bold">Population:</span> ${country.population.toLocaleString()}</p>
-                                
-                            </div>
-                         </article>
-                    </button>
-                </div>
-                
-                <div class="modal fade" id="${country.cca3}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-4" id="exampleModalLabel">${country.name.common}</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row d-block d-lg-flex py-1">
-                                         <!-- country.latlng hierdoor krijg je de cooordinaten van een land (voor het land)-->
-                                         <!-- country.capitalInfo.latlng coordinaten van Capital (voor marker)-->
-                                         <!--leaflet map-->
-                                            <div id="${country.flag}" class="col-12 col-lg-8 modal-kaart mb-4 mb-lg-0">
-                                                <!-- Hier komt de leaflet map -->
-                                               <!-- <img src="https://placehold.co/800x500" class="img-fluid" alt=""> -->
-                                            </div>
-                                            <div class="col-12 col-lg-4">
-                                                <img class="img-fluid w-100 mb-4" src="${country.flags.svg}" alt="country_flag">
-                                                <p class="mb-2"><span class="fw-bold">Capitol:</span> ${country.capital}</p>
-                                                <p class="mb-2"><span class="fw-bold">Languages:</span> ${languages}</p>
-                                                <p class="mb-2"><span class="fw-bold">Currency:</span> ${currencyInfo}</p>
-                                                <p class="mb-2"><span class="fw-bold">Population:</span> ${country.population.toLocaleString()}</p>
-                                                
-                                            </div>      
-                                    </div>        
-                                </div>
-                 
-                            </div>
-                            
+            <div class="col">
+                <button type="button" class="card-btn border-0 p-0 m-0 w-100 text-start" data-bs-toggle="modal" data-bs-target="#${country.cca3}">
+                    <article class="card p-3 shadow-sm border-0">
+                        <img src="${country.flags.svg}" class="card-img-top" alt="Flag of ${country.name.common}">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">${country.name.common}</h5>
+                            <p class="card-text mb-1"><span class="fw-bold">Region:</span> ${country.region}</p>
+                            <p class="card-text m-0"><span class="fw-bold">Population:</span> ${country.population.toLocaleString()}</p>
                         </div>
-                </div>
+                    </article>
+                </button>
+            </div>
             
-       `;
+            <div class="modal fade" id="${country.cca3}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-4" id="exampleModalLabel">${country.name.common}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row d-block d-lg-flex py-1">
+                                <div class="col-12 col-lg-8 modal-kaart mb-4 mb-lg-0">
+                                    <div id="${mapId}" style="height: 400px;"></div>
+                                </div>
+                                <div class="col-12 col-lg-4">
+                                    <img class="img-fluid w-100 mb-4" src="${country.flags.svg}" alt="country_flag">
+                                    <p class="mb-2"><span class="fw-bold">Capital:</span> ${country.capital}</p>
+                                    <p class="mb-2"><span class="fw-bold">Languages:</span> ${languages}</p>
+                                    <p class="mb-2"><span class="fw-bold">Currency:</span> ${currencyInfo}</p>
+                                    <p class="mb-2"><span class="fw-bold">Population:</span> ${country.population.toLocaleString()}</p>
+                                </div>      
+                            </div>        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     });
+
     countriesContainer.innerHTML = outputHTML;
     errorMessage.innerHTML = '';
+
+    // Voeg eventlisteners toe voor kaarten in modals
+    countries.forEach(country => {
+        const mapId = `map-${country.cca3}`;
+        const modal = document.getElementById(country.cca3);
+
+        modal.addEventListener('shown.bs.modal', () => {
+            initializeMap(mapId, country.latlng, country.capitalInfo?.latlng || country.latlng);
+        });
+    });
+}
+
+// Initialiseer een Leaflet-kaart
+function initializeMap(mapId, countryCoords, capitalCoords) {
+    const mapContainer = document.getElementById(mapId);
+
+    if (!mapContainer || mapContainer.innerHTML !== '') {
+        // Vermijd dubbele initialisatie
+        return;
+    }
+
+    const map = L.map(mapId).setView(countryCoords, 5);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // Voeg marker toe voor de hoofdstad
+    if (capitalCoords) {
+        L.marker(capitalCoords).addTo(map).bindPopup('Capital').openPopup();
+    }
 }
 
 // Foutmelding weergeven
@@ -145,7 +150,6 @@ filterForm.addEventListener("submit", (event) => {
     const selectedRegion = continentSelect.value;
 
     if (searchValue && selectedRegion) {
-        // Zoek een land binnen een geselecteerde regio
         axios.get(`https://restcountries.com/v3.1/name/${searchValue}`)
             .then(response => {
                 const countries = response.data.filter(country =>
@@ -163,10 +167,8 @@ filterForm.addEventListener("submit", (event) => {
                 displayError(`No results found for "${searchValue}".`);
             });
     } else if (searchValue) {
-        // Zoek een land zonder rekening te houden met de regio
         axios.get(`https://restcountries.com/v3.1/name/${searchValue}`)
             .then(response => {
-                // Filter resultaten exacte overeenkomst te hebben
                 const countries = response.data.filter(country =>
                     country.name.common.toLowerCase() === searchValue.toLowerCase()
                 );
@@ -181,10 +183,8 @@ filterForm.addEventListener("submit", (event) => {
                 displayError(`No results found for "${searchValue}".`);
             });
     } else if (selectedRegion) {
-        // Zoek alle landen binnen een regio
         getCountries(`https://restcountries.com/v3.1/region/${selectedRegion}`);
     } else {
-        // Als geen van beide is ingevuld, toon alle landen
         getCountries(`https://restcountries.com/v3.1/all`);
     }
 
