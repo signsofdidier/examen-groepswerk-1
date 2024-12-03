@@ -39,8 +39,8 @@
     <section id="hero" class="container-fluid text-center p-0 m-0 position-relative">
         <img src="./images/world-hero-2.jpg" alt="afbeelding wereldmap" class="w-100">
         <div class="hero-overlay d-flex flex-column justify-content-center align-items-center text-white w-100 h-100">
-            <h1 class="fs-1 mb-4">Country APP</h1>
-            <p class="fs-2">The only country-application you'll ever need!</p>
+            <h1 class="fs-1 mb-4 shadow">Country APP</h1>
+            <p class="fs-2 text-shadow">The only country-application you'll ever need!</p>
         </div>
     </section>
 </header>
@@ -54,7 +54,7 @@
                 <form id="filter-form" class="d-flex flex-column flex-lg-row justify-content-center">
                     <!-- Zoekveld -->
                     <input id="country-search" type="text" class="form-control mb-4 mb-lg-0 me-2 py-3 py-lg-2" placeholder="Please fill in a country">
-                    <!-- Select continent -->
+                    <!-- Select Region -->
                     <select id="continent-select" class="form-select me-2 mb-4 mb-lg-0 py-3 py-lg-2">
                         <option value="">Choose a continent</option>
                     </select>
@@ -69,25 +69,7 @@
     <!--Card section-->
     <section class="container mb-5">
         <!-- Hier komen de landen kaarten -->
-        <div id="countries-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <!--Deze col moet dynamisch via api-->
-            <!--<div class="col">
-                &lt;!&ndash;Card&ndash;&gt;
-                <article class="card">
-                    &lt;!&ndash;De vlag&ndash;&gt;
-                    <img src="https://placehold.co/600x400" class="card-img-top" alt="">
-                    <div class="card-body">
-                        <h5 class="card-title">&lt;!&ndash;Naam van land&ndash;&gt;</h5>
-                        <p class="card-text">Continent: </p>
-                        <p class="card-text">Population: </p>
-                        &lt;!&ndash; Button trigger modal &ndash;&gt;
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            More info
-                        </button>
-                    </div>
-                </article>
-            </div>-->
-        </div>
+        <div id="countries-container" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 text-start"></div>
 
         <!-- Foutmeldingen -->
         <div id="error-message" class="text-danger mt-3"><!--Geen landen gevonden--></div>
@@ -98,48 +80,11 @@
 
 </footer>
 
-
-<!-- BOOTSTRAP JS -->
 <script crossorigin="anonymous"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-</script>
-
-<!-- AOS JS -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-<!-- AXIOS JS -->
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<!-- Modal die in de api zal komen-->
-<!--<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">&lt;!&ndash;Land naam&ndash;&gt;</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex">
-                &lt;!&ndash;leaflet map&ndash;&gt;
-                <div class="modal-kaart">
-                    &lt;!&ndash; Hier komt de leaflet map &ndash;&gt;
-                </div>
-                &lt;!&ndash;land info&ndash;&gt;
-                <div class="modal-info">
-                    <p>Capitol: </p>
-                    <p>Language: </p>
-                    <p>currency: </p>
-                    <p>Population: </p>
-                    <img src="https://placehold.co/600x400" alt="">
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>-->
 
 </body>
 </html>
