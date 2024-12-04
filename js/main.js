@@ -1,76 +1,72 @@
-// Verkrijg referenties naar DOM-elementen die we later nodig hebben
-const filterForm = document.getElementById("filter-form"); // Formulier waarmee gebruikers filters toepassen
-const countrySearch = document.getElementById("country-search"); // Invoerveld voor landnaam
-const continentSelect = document.getElementById("continent-select"); // Dropdown voor continenten
-const countriesContainer = document.getElementById("countries-container"); // Container waarin de landen worden weergegeven
-const errorMessage = document.getElementById("error-message"); // Div voor het weergeven van foutmeldingen
+// pak de elementen uit de html die we nodig hebben voor de app
+const filterForm = document.getElementById("filter-form") // formulier waar filters ingesteld worden
+const countrySearch = document.getElementById("country-search") // invoerveld voor de naam van een land
+const continentSelect = document.getElementById("continent-select") // dropdown waar gebruiker een continent kiest
+const countriesContainer = document.getElementById("countries-container") // hier tonen we de landen
+const errorMessage = document.getElementById("error-message") // div om foutmeldingen te tonen
 
-// Dynamisch de beschikbare regio's ophalen
+// haalt regio’s op en zet die in de dropdown
 function getRegions() {
-    // API-aanroep naar alle landen
-    axios.get('https://restcountries.com/v3.1/all')
+    axios.get('https://restcountries.com/v3.1/all') // haal alle landen van de api
         .then(response => {
-            // Verkrijg alle unieke regio's (bijv. Europa, Azië)
-            const regions = new Set(response.data.map(country => country.region).filter(region => region));
+            const regions = new Set(response.data.map(country => country.region).filter(region => region))
+            // maak een set met unieke regio’s, en filter lege waardes eruit
+
             regions.forEach(region => {
-                // Voeg elke regio toe als optie in de dropdown
-                const option = document.createElement("option");
-                option.value = region; // Waarde die wordt gebruikt voor filtering
-                option.textContent = region; // Tekst die wordt weergegeven aan de gebruiker
-                continentSelect.appendChild(option);
-            });
+                const option = document.createElement("option") // maak een nieuwe option aan
+                option.value = region // zet de waarde van de optie op de naam van de regio
+                option.textContent = region // zet de zichtbare tekst van de optie
+                continentSelect.appendChild(option) // voeg de optie toe aan de dropdown
+            })
         })
         .catch(error => {
-            console.error("Error loading regions:", error); // Log fouten voor debugging
-        });
+            console.error("Error loading regions:", error) // log fout als regio’s niet geladen kunnen worden
+        })
 }
 
-// Dynamisch landen ophalen en weergeven op basis van een URL
+// haalt landen op via de api url en toont ze op de pagina
 function getCountries(url) {
-    axios.get(url)
+    axios.get(url) // maak api-aanroep naar de url
         .then(response => {
-            const countries = response.data;
+            const countries = response.data // zet de data van de response in een variabele
             if (!countries || countries.length === 0) {
-                // Geen landen gevonden
-                displayError("No countries found.");
-                return;
+                // als er geen landen zijn of array is leeg
+                displayError("No countries found.") // foutmelding tonen
+                return
             }
-            // Toon de opgehaalde landen in de UI
-            displayCountries(countries);
+            displayCountries(countries) // landen weergeven als er data is
         })
         .catch(error => {
-            console.error("Error fetching countries:", error); // Log fouten
-            displayError("Error retrieving countries."); // Toon foutmelding in de UI
-        });
+            console.error("Error fetching countries:", error) // fout tonen in de console
+            displayError("Error retrieving countries.") // fout tonen in de app
+        })
 }
 
-// Landen in de container tonen
+// toont een lijst van landen in de pagina
 function displayCountries(countries) {
-    let outputHTML = ''; // Variabele om de HTML op te bouwen
+    let outputHTML = ''
 
     countries.forEach(country => {
-        // Verkrijg informatie over de valuta
-        let currencyInfo = '';
+        let currencyInfo = '' // hier verzamelen we info over valuta van het land
         if (country.currencies) {
-            const currencyKeys = Object.keys(country.currencies); // Valutacodes ophalen
+            // check of er valuta is
+            const currencyKeys = Object.keys(country.currencies) // haal de keys van de valuta op
             currencyInfo = currencyKeys.map(key => {
-                const currency = country.currencies[key];
-                return `${currency.name} (${currency.symbol || 'Geen symbool'})`; // Naam en symbool van de valuta
-            }).join(', ');
+                // voor elke key haal de naam en het symbool van de valuta op
+                const currency = country.currencies[key]
+                return `${currency.name} (${currency.symbol || 'Geen symbool'})`
+            }).join(', ') // zet ze samen in een string, gescheiden door een komma
         } else {
-            currencyInfo = 'No currency info available.'; // Fallback tekst
+            currencyInfo = 'No currency info available.' // standaardtekst als er geen valuta is
         }
 
-        // Verkrijg de talen die in het land worden gesproken
-        const languages = country.languages ? Object.values(country.languages).join(', ') : 'No languages available!';
+        const languages = country.languages ? Object.values(country.languages).join(', ') : 'No languages available!'
+        // talen ophalen als ze bestaan, anders standaardtekst
 
-        // Uniek kaart-ID voor Leaflet-kaart in modal
-        const mapId = `map-${country.cca3}`;
+        const mapId = `map-${country.cca3}` // uniek id voor de kaart van elk land
 
-        // HTML opbouwen voor elk land en een modal
         outputHTML += `
             <div class="col">
-                <!-- Kaart-knop -->
                 <button type="button" class="card-btn border-0 p-0 m-0 w-100 text-start" data-bs-toggle="modal" data-bs-target="#${country.cca3}">
                     <article class="card p-3 shadow-sm border-0">
                         <img src="${country.flags.svg}" class="card-img-top" alt="Flag of ${country.name.common}">
@@ -82,8 +78,6 @@ function displayCountries(countries) {
                     </article>
                 </button>
             </div>
-            
-            <!-- Modal voor meer details -->
             <div class="modal fade" id="${country.cca3}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
@@ -94,7 +88,6 @@ function displayCountries(countries) {
                         <div class="modal-body">
                             <div class="row d-block d-lg-flex py-1">
                                 <div class="col-12 col-lg-8 modal-kaart mb-4 mb-lg-0">
-                                    <!-- Kaart-div -->
                                     <div id="${mapId}" style="height: 400px;"></div>
                                 </div>
                                 <div class="col-12 col-lg-4">
@@ -109,105 +102,104 @@ function displayCountries(countries) {
                     </div>
                 </div>
             </div>
-        `;
-    });
+        `
+    })
 
-    countriesContainer.innerHTML = outputHTML; // Voeg de HTML toe aan de container
-    errorMessage.innerHTML = ''; // Reset foutmeldingen
+    countriesContainer.innerHTML = outputHTML // de opgemaakte html in de container plaatsen
+    errorMessage.innerHTML = '' // foutmeldingen leegmaken
 
-    // Initialiseer kaarten in modals
     countries.forEach(country => {
-        const mapId = `map-${country.cca3}`;
-        const modal = document.getElementById(country.cca3);
+        // voor elk land een kaart initialiseren
+        const mapId = `map-${country.cca3}`
+        const modal = document.getElementById(country.cca3)
 
+        // Luistert naar het event wanneer de modal volledig zichtbaar is en initialiseert de kaart binnenin de modal
         modal.addEventListener('shown.bs.modal', () => {
-            initializeMap(mapId, country.latlng, country.capitalInfo?.latlng || country.latlng);
-        });
-    });
+            initializeMap(mapId, country.latlng, country.capitalInfo?.latlng || country.latlng)
+        })
+    })
 }
 
-// Initialiseer een Leaflet-kaart
+// de leaflet kaart
 function initializeMap(mapId, countryCoords, capitalCoords) {
-    const mapContainer = document.getElementById(mapId);
-
+    const mapContainer = document.getElementById(mapId)
     if (!mapContainer || mapContainer.innerHTML !== '') {
-        // Vermijd dubbele initialisatie
-        return;
+        // controleer of de kaart al gemaakt is
+        return // stop als er al een kaart is
     }
 
-    const map = L.map(mapId).setView(countryCoords, 5); // Stel beginpositie van de kaart in
+    const map = L.map(mapId).setView(countryCoords, 5) // startpositie van de kaart instellen
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    }).addTo(map) // voeg een tile layer toe
 
-    // Voeg een marker toe voor de hoofdstad
     if (capitalCoords) {
-        L.marker(capitalCoords).addTo(map);
+        L.marker(capitalCoords).addTo(map) // marker toevoegen voor de hoofdstad
     }
 }
 
-// Foutmelding weergeven
+// toont foutmeldingen in de pagina
 function displayError(message) {
-    countriesContainer.innerHTML = ''; // Leeg de landencontainer
-    errorMessage.innerHTML = `<div class="alert alert-warning" role="alert">${message}</div>`; // Toon foutmelding
+    countriesContainer.innerHTML = '' // maak landen leeg
+    errorMessage.innerHTML = `<div class="alert alert-warning" role="alert">${message}</div>`
+    // toon een foutmelding als warning
 }
 
-// Klikken op de filter button
+// luistert naar de filterknop en haalt de juiste data op
 filterForm.addEventListener("submit", (event) => {
-    event.preventDefault(); // Voorkom herladen van de pagina
+    event.preventDefault() // stop dat de pagina opnieuw laadt
 
-    const searchValue = countrySearch.value.trim(); // Waarde van zoekveld
-    const selectedRegion = continentSelect.value; // Geselecteerde regio
+    const searchValue = countrySearch.value.trim() // waarde van zoekveld
+    const selectedRegion = continentSelect.value // gekozen continent
 
-    // Verschillende filteropties
     if (searchValue && selectedRegion) {
-        // Zoeken op naam én regio
+        // als gebruiker zowel een land als een continent heeft ingevuld
         axios.get(`https://restcountries.com/v3.1/name/${searchValue}`)
             .then(response => {
                 const countries = response.data.filter(country =>
                     country.name.common.toLowerCase() === searchValue.toLowerCase() &&
                     country.region === selectedRegion
-                );
+                ) // filter alleen landen die voldoen aan beide filters
                 if (countries.length === 0) {
-                    displayError(`The country "${searchValue}" does not exist in the region "${selectedRegion}".`);
+                    displayError(`The country "${searchValue}" does not exist in the region "${selectedRegion}".`)
                 } else {
-                    displayCountries(countries);
+                    displayCountries(countries)
                 }
             })
             .catch(error => {
-                console.error("Error fetching countries:", error);
-                displayError(`No results found for "${searchValue}".`);
-            });
+                console.error("Error fetching countries:", error)
+                displayError(`No results found for "${searchValue}".`)
+            })
     } else if (searchValue) {
-        // Zoeken op naam
+        // alleen zoeken op naam
         axios.get(`https://restcountries.com/v3.1/name/${searchValue}`)
             .then(response => {
                 const countries = response.data.filter(country =>
                     country.name.common.toLowerCase() === searchValue.toLowerCase()
-                );
+                )
                 if (countries.length === 0) {
-                    displayError(`No exact match found for "${searchValue}".`);
+                    displayError(`No exact match found for "${searchValue}".`)
                 } else {
-                    displayCountries(countries);
+                    displayCountries(countries)
                 }
             })
             .catch(error => {
-                console.error("Error fetching countries:", error);
-                displayError(`No results found for "${searchValue}".`);
-            });
+                console.error("Error fetching countries:", error)
+                displayError(`No results found for "${searchValue}".`)
+            })
     } else if (selectedRegion) {
-        // Zoeken op regio
-        getCountries(`https://restcountries.com/v3.1/region/${selectedRegion}`);
+        // alleen zoeken op regio
+        getCountries(`https://restcountries.com/v3.1/region/${selectedRegion}`)
     } else {
-        // Toon alle landen
-        getCountries(`https://restcountries.com/v3.1/all`);
+        // geen filters, toon alle landen
+        getCountries(`https://restcountries.com/v3.1/all`)
     }
 
-    countrySearch.value = ''; // Reset het zoekveld
-});
+    countrySearch.value = '' // zoekveld leegmaken na het verzenden
+})
 
-// Initialiseer de applicatie
-getRegions(); // Haal regio's op
-getCountries(`https://restcountries.com/v3.1/all`); // Haal alle landen op bij start
+// haalt regio’s en landen op
+getRegions() // regio’s ophalen
+getCountries(`https://restcountries.com/v3.1/all`) // alle landen ophalen bij laden van de pagina
